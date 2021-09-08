@@ -1,0 +1,60 @@
+name: Crossref Uploader
+description: Uploads the crossref.xml file
+inputs:
+  pdf_path:
+    description: The path to the pdf file
+    required: true
+  papers_repo:
+    description: The repository containing the published and submitted papers
+    required: true
+  issue_id:
+    description: The issue number of the submission
+    required: true
+  branch_prefix:
+    description: The prefix to add to the name of all branches
+    required: false
+    default: ""
+  bot_token:
+    description: The access token to be used to upload files
+    required: true
+outputs:
+  html_url:
+    description: "HTML URL for the uploaded crossref file"
+    value: ${{ steps.xml_uploader.outputs.crossref_html_url }}
+  download_url:
+    description: "Download URL for the uploaded crossref file"
+    value: ${{ steps.xml_uploader.outputs.crossref_download_url }}
+runs:
+  using: "composite"
+  steps:
+    - name: Install Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.0.2
+        bundler-cache: true
+        bundler: Gemfile.lock
+    - name: cd
+      shell: bash
+      run: |
+        cd ${{ github.action_path }}
+        bundle install
+    - name: Upload crossref.xml to paper branch
+      id: xml_uploader
+      shell: bash
+      env:
+        PAPERS_REPO: ${{ inputs.papers_repo }}
+        BRANCH_PREFIX: ${{ inputs.branch_prefix }}
+        ISSUE_ID: ${{ inputs.issue_id }}
+        PDF_PATH: ${{ inputs.pdf_path }}
+        BOT_TOKEN: ${{ inputs.bot_token }}
+      run: |
+        ruby ${{ github.action_path }}/add_crossref_to_branch.rb
+    - name: Print results
+      shell: bash
+      run: |
+        echo "Crossref HTML URL: ${{ steps.xml_uploader.outputs.crossref_html_url }}"
+        echo "Crossref download  URL: ${{ steps.xml_uploader.outputs.crossref_download_url }}"
+
+branding:
+  icon: upload
+  color: green
