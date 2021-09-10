@@ -44,8 +44,9 @@ runs:
         ISSUE_ID: ${{ inputs.issue_id }}
         PDF_PATH: ${{ inputs.pdf_path }}
         BOT_TOKEN: ${{ inputs.bot_token }}
+        BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
       run: |
-        ruby ${{ github.action_path }}/add_crossref_to_branch.rb
+        bundle exec ruby ${{ github.action_path }}/add_crossref_to_branch.rb
     - name: Print results
       shell: bash
       run: |
