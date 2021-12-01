@@ -11,21 +11,19 @@ def github_client
 end
 
 issue_id = ENV["ISSUE_ID"]
-pdf_path = ENV["PDF_PATH"]
+jats_path = ENV["JATS_PATH"]
 papers_repo = ENV["PAPERS_REPO"]
 branch_prefix = ENV["BRANCH_PREFIX"]
-crossref_xml_path = pdf_path.gsub(".pdf", ".crossref.xml")
-
 
 id = "%05d" % issue_id
 branch = branch_prefix.empty? ? id.to_s : "#{branch_prefix}.#{id}"
-crossref_xml_uploaded_path = "#{branch}/10.21105.#{branch}.crossref.xml"
+jats_uploaded_path = "#{branch}/10.21105.#{branch}.jats"
 
 gh_response = github_client.create_contents(papers_repo,
-                                            crossref_xml_uploaded_path,
-                                            "Creating 10.21105.#{branch}.crossref.xml",
-                                            File.open("#{crossref_xml_path.strip}").read,
+                                            jats_uploaded_path,
+                                            "Creating 10.21105.#{branch}.jats",
+                                            File.open("#{jats_path.strip}").read,
                                             branch: branch)
 
-system("echo '::set-output name=crossref_html_url::#{gh_response.content.html_url}'")
-system("echo '::set-output name=crossref_download_url::#{gh_response.content.download_url}'")
+system("echo '::set-output name=jats_html_url::#{gh_response.content.html_url}'")
+system("echo '::set-output name=jats_download_url::#{gh_response.content.download_url}'")

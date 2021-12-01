@@ -1,8 +1,8 @@
 name: Crossref Uploader
-description: Uploads the crossref.xml file
+description: Uploads the paper JATS file
 inputs:
-  pdf_path:
-    description: The path to the pdf file
+  jats_path:
+    description: The path to the JATS file
     required: true
   papers_repo:
     description: The repository containing the published and submitted papers
@@ -19,11 +19,11 @@ inputs:
     required: true
 outputs:
   html_url:
-    description: "HTML URL for the uploaded crossref file"
-    value: ${{ steps.xml_uploader.outputs.crossref_html_url }}
+    description: "HTML URL for the uploaded JATS file"
+    value: ${{ steps.jats_uploader.outputs.jats_html_url }}
   download_url:
-    description: "Download URL for the uploaded crossref file"
-    value: ${{ steps.xml_uploader.outputs.crossref_download_url }}
+    description: "Download URL for the uploaded JATS file"
+    value: ${{ steps.jats_uploader.outputs.jats_download_url }}
 runs:
   using: "composite"
   steps:
@@ -32,26 +32,26 @@ runs:
       with:
         ruby-version: 3.0.2
         bundler-cache: true
-        cache-version: upload-crossref
+        cache-version: upload-jats
         bundler: Gemfile.lock
         working-directory: ${{ github.action_path }}
-    - name: Upload crossref.xml to paper branch
-      id: xml_uploader
+    - name: Upload JATS file to paper branch
+      id: jats_uploader
       shell: bash
       env:
         PAPERS_REPO: ${{ inputs.papers_repo }}
         BRANCH_PREFIX: ${{ inputs.branch_prefix }}
         ISSUE_ID: ${{ inputs.issue_id }}
-        PDF_PATH: ${{ inputs.pdf_path }}
+        JATS_PATH: ${{ inputs.jats_path }}
         BOT_TOKEN: ${{ inputs.bot_token }}
         BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
       run: |
-        bundle exec ruby ${{ github.action_path }}/add_crossref_to_branch.rb
+        bundle exec ruby ${{ github.action_path }}/add_jats_to_branch.rb
     - name: Print results
       shell: bash
       run: |
-        echo "Crossref HTML URL: ${{ steps.xml_uploader.outputs.crossref_html_url }}"
-        echo "Crossref download  URL: ${{ steps.xml_uploader.outputs.crossref_download_url }}"
+        echo "JATS file HTML URL: ${{ steps.jats_uploader.outputs.jats_html_url }}"
+        echo "JATS file download URL: ${{ steps.jats_uploader.outputs.jats_download_url }}"
 
 branding:
   icon: upload
