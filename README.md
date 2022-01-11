@@ -18,10 +18,12 @@ The action accepts the following inputs:
 
 ### Outputs
 
-If the action runs successfully it generates two outpus:
+If the action runs successfully it generates four outpus:
 
-- **html_url**: The HTML URL for the newly uploaded JATS file
-- **download_url**: The direct download URL for the JATS file
+- **crossref_html_url**: The HTML URL for the newly uploaded Crossref XML file
+- **crossref_download_url**: The direct download URL for the Crossref XML file
+- **jats_html_url**: The HTML URL for the newly uploaded JATS file
+- **jats_download_url**: The direct download URL for the JATS file
 
 ### Example
 
