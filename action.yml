@@ -28,10 +28,10 @@ outputs:
     description: "Download URL for the uploaded JATS file"
     value: ${{ steps.metadata_files_uploader.outputs.jats_download_url }}
   crossref_html_url:
-    description: "HTML URL for the uploaded Crossref file"
+    description: "HTML URL for the uploaded Crossref XML file"
     value: ${{ steps.metadata_files_uploader.outputs.crossref_html_url }}
   crossref_download_url:
-    description: "Download URL for the uploaded Crossref file"
+    description: "Download URL for the uploaded Crossref XML file"
     value: ${{ steps.metadata_files_uploader.outputs.crossref_download_url }}
 runs:
   using: "composite"
