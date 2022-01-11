@@ -4,6 +4,9 @@ inputs:
   jats_path:
     description: The path to the JATS file
     required: true
+  crossref_path:
+    description: The path to the Crossref XML file
+    required: true
   papers_repo:
     description: The repository containing the published and submitted papers
     required: true
@@ -18,12 +21,18 @@ inputs:
     description: The access token to be used to upload files
     required: true
 outputs:
-  html_url:
+  jats_html_url:
     description: "HTML URL for the uploaded JATS file"
-    value: ${{ steps.jats_uploader.outputs.jats_html_url }}
-  download_url:
+    value: ${{ steps.metadata_files_uploader.outputs.jats_html_url }}
+  jats_download_url:
     description: "Download URL for the uploaded JATS file"
-    value: ${{ steps.jats_uploader.outputs.jats_download_url }}
+    value: ${{ steps.metadata_files_uploader.outputs.jats_download_url }}
+  crossref_html_url:
+    description: "HTML URL for the uploaded Crossref file"
+    value: ${{ steps.metadata_files_uploader.outputs.crossref_html_url }}
+  crossref_download_url:
+    description: "Download URL for the uploaded Crossref file"
+    value: ${{ steps.metadata_files_uploader.outputs.crossref_download_url }}
 runs:
   using: "composite"
   steps:
@@ -32,26 +41,29 @@ runs:
       with:
         ruby-version: 3.0.3
         bundler-cache: true
-        cache-version: upload-jats
+        cache-version: upload-metadata-files
         bundler: Gemfile.lock
         working-directory: ${{ github.action_path }}
-    - name: Upload JATS file to paper branch
-      id: jats_uploader
+    - name: Upload JATS and Crossref XML files to paper branch
+      id: metadata_files_uploader
       shell: bash
       env:
         PAPERS_REPO: ${{ inputs.papers_repo }}
         BRANCH_PREFIX: ${{ inputs.branch_prefix }}
         ISSUE_ID: ${{ inputs.issue_id }}
         JATS_PATH: ${{ inputs.jats_path }}
+        CROSSREF_PATH: ${{ inputs.crossref_path }}
         BOT_TOKEN: ${{ inputs.bot_token }}
         BUNDLE_GEMFILE: ${{ github.action_path }}/Gemfile
       run: |
-        bundle exec ruby ${{ github.action_path }}/add_jats_to_branch.rb
+        bundle exec ruby ${{ github.action_path }}/add_files_to_branch.rb
     - name: Print results
       shell: bash
       run: |
-        echo "JATS file HTML URL: ${{ steps.jats_uploader.outputs.jats_html_url }}"
-        echo "JATS file download URL: ${{ steps.jats_uploader.outputs.jats_download_url }}"
+        echo "Crossref XML file HTML URL: ${{ steps.metadata_files_uploader.outputs.crossref_html_url }}"
+        echo "Crossref XML file download URL: ${{ steps.metadata_files_uploader.outputs.crossref_download_url }}"
+        echo "JATS file HTML URL: ${{ steps.metadata_files_uploader.outputs.jats_html_url }}"
+        echo "JATS file download URL: ${{ steps.metadata_files_uploader.outputs.jats_download_url }}"
 
 branding:
   icon: upload
