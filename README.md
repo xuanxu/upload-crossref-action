@@ -13,8 +13,8 @@ The action accepts the following inputs:
 - **jats_path**: Required. The path to the jats file with the paper metadata
 - **papers_repo**: Required. The repository containing the published and submitted papers in `owner/reponame` format.
 - **issue_id**: Required. The issue number of the submission of the paper.
-- **bot_token**: Required. The access token to be used to upload files, usually a bot account.
 - **branch_prefix**: Optional. The prefix of the name of the paper's branch.
+- **bot_token**: Optional. The GitHub access token to be used to upload files. Default: `ENV['GH_ACCESS_TOKEN']`
 
 ### Outputs
 

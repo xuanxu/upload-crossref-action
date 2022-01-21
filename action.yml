@@ -19,7 +19,7 @@ inputs:
     default: ""
   bot_token:
     description: The access token to be used to upload files
-    required: true
+    required: false
 outputs:
   jats_html_url:
     description: "HTML URL for the uploaded JATS file"
